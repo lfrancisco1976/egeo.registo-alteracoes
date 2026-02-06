@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recolha de Horas Extra - Fornecedor</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 30 font-family: sans-serif; padding: 20px; line-height: 1.6; background-color: #f4f4f9; }
+        .container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { color: #333; text-align: center; }
+        .campo { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: #555; }
+        input[type="text"], input[type="date"], input[type="number"], textarea, input[type="file"] { 
+            width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; 
+        }
+        .opcional { font-weight: normal; font-size: 0.85em; color: #888; margin-left: 5px; }
+        button { 
+            background: #007bff; color: white; border: none; padding: 12px 20px; border-radius: 4px; 
+            cursor: pointer; width: 100%; font-size: 16px; transition: background 0.3s;
+        }
+        button:hover { background: #0056b3; }
+        button:disabled { background: #ccc; }
+        #mensagem { margin-top: 20px; text-align: center; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Registo de Horas Extra</h2>
+    <form id="formHoras">
+        
+        <div class="campo">
+            <label>Data do Serviço *</label>
+            <input type="date" name="dataServico" required>
+        </div>
+
+        <div class="campo">
+            <label>Nº Encomenda *</label>
+            <input type="text" name="numEncomenda" required>
+        </div>
+
+        <div class="campo">
+            <label>Matrícula Viatura *</label>
+            <input type="text" name="matricula" required>
+        </div>
+
+        <div class="campo">
+            <label>Nº Guia de Transporte *</label>
+            <input type="text" name="numGuia" required>
+        </div>
+
+        <div class="campo">
+            <label>Nº Horas Paralização <span class="opcional">(Opcional)</span></label>
+            <input type="number" step="0.5" name="horasParalizacao">
+        </div>
+
+        <div class="campo">
+            <label>Valor do Frete Corrigido <span class="opcional">(Opcional)</span></label>
+            <input type="number" step="0.01" name="valorFrete">
+        </div>
+
+        <div class="campo">
+            <label>Anexar Foto ou PDF (Max 5MB) *</label>
+            <input type="file" id="ficheiro" accept="application/pdf,image/*" required>
+        </div>
+
+        <div class="campo">
+            <label>Observações <span class="opcional">(Opcional)</span></label>
+            <textarea name="observacoes" rows="3"></textarea>
+        </div>
+
+        <button type="submit" id="btnEnviar">Submeter Registo</button>
+    </form>
+    <div id="mensagem"></div>
+</div>
+
+<script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwZ5q5Hfx1W3dvx8Z0qUZXckTq39cIohiZBb5pqzM6yDeJWrZxT38JD1Db0_4mCBeSi/exec';
+    const form = document.getElementById('formHoras');
+    const btn = document.getElementById('btnEnviar');
+    const msg = document.getElementById('mensagem');
+
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        
+        const fileInput = document.getElementById('ficheiro');
+        const file = fileInput.files[0];
+
+        // Validação de Tamanho de Ficheiro (5MB)
+        if (file && file.size > 5 * 1024 * 1024) {
+            alert('Erro: O ficheiro é demasiado grande. O máximo permitido é 5MB.');
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerText = 'A enviar...';
+        msg.innerText = 'A processar o envio, por favor aguarde...';
+
+        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+            .then(response => {
+                msg.style.color = 'green';
+                msg.innerText = 'Sucesso! Os dados foram registados na folha de cálculo.';
+                form.reset();
+                btn.disabled = false;
+                btn.innerText = 'Submeter Registo';
+            })
+            .catch(error => {
+                msg.style.color = 'red';
+                msg.innerText = 'Erro ao enviar. Verifique a ligação ou tente mais tarde.';
+                btn.disabled = false;
+                btn.innerText = 'Submeter Registo';
+                console.error('Erro!', error.message);
+            });
+    });
+</script>
+
+</body>
+</html>
