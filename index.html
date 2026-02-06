@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Fornecedor | Registo de Horas Extra</title>
+    <title>Portal do Fornecedor | Registo de Horas Extra</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #2563eb;
+            --primary-hover: #1d4ed8;
             --bg: #f8fafc;
             --card: #ffffff;
             --text: #1e293b;
-            --border: #e2e8f0;
+            --label: #475569;
+            --border: #cbd5e1;
         }
 
         body { 
@@ -32,18 +34,19 @@
             max-width: 850px;
             padding: 40px;
             border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
         }
 
-        .header { text-align: center; margin-bottom: 30px; }
-        .header h2 { margin: 0; color: #0f172a; font-weight: 600; font-size: 1.8rem; }
-        .header p { color: #64748b; margin-top: 8px; }
+        .header { text-align: center; margin-bottom: 35px; }
+        .header h2 { margin: 0; color: #0f172a; font-weight: 600; font-size: 1.75rem; }
+        .header p { color: #64748b; margin-top: 10px; font-size: 1rem; }
 
+        /* Grelha de formulário para PC */
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 24px;
         }
 
         .full-width { grid-column: span 2; }
@@ -52,36 +55,38 @@
         
         label { 
             display: block; 
-            margin-bottom: 6px; 
-            font-size: 0.85rem; 
+            margin-bottom: 8px; 
+            font-size: 0.9rem; 
             font-weight: 600;
-            color: #475569;
+            color: var(--label);
         }
 
         input, textarea { 
             width: 100%; 
-            padding: 12px; 
-            border: 1px solid #cbd5e1; 
+            padding: 12px 16px; 
+            border: 1px solid var(--border); 
             border-radius: 8px; 
-            font-size: 0.95rem;
-            transition: all 0.2s;
+            font-size: 1rem;
+            transition: all 0.2s ease;
             outline: none;
             background: #fff;
         }
 
         input:focus, textarea:focus { 
             border-color: var(--primary); 
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); 
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); 
         }
 
-        .optional-tag { font-weight: normal; color: #94a3b8; font-size: 0.75rem; margin-left: 4px; }
+        .opcional { font-weight: normal; color: #94a3b8; font-size: 0.8rem; }
 
         input[type="file"] {
-            padding: 8px;
-            border: 2px dashed #cbd5e1;
+            padding: 10px;
+            border: 2px dashed var(--border);
             background: #fdfdfd;
             cursor: pointer;
         }
+
+        input[type="file"]:hover { background: #f1f5f9; border-color: var(--primary); }
 
         button { 
             background: var(--primary); 
@@ -91,17 +96,18 @@
             border-radius: 8px; 
             cursor: pointer; 
             width: 100%; 
-            font-size: 1rem; 
+            font-size: 1.1rem; 
             font-weight: 600;
-            margin-top: 10px;
-            transition: all 0.2s;
+            margin-top: 15px;
+            transition: all 0.2s ease;
         }
 
-        button:hover { background: #1d4ed8; transform: translateY(-1px); }
+        button:hover { background: var(--primary-hover); transform: translateY(-1px); }
+        button:active { transform: translateY(0); }
         button:disabled { background: #94a3b8; cursor: not-allowed; transform: none; }
 
         #status { 
-            margin-top: 20px; 
+            margin-top: 25px; 
             padding: 15px;
             border-radius: 8px;
             text-align: center;
@@ -112,7 +118,7 @@
         @media (max-width: 700px) {
             .form-grid { grid-template-columns: 1fr; }
             .full-width { grid-column: span 1; }
-            .container { padding: 25px; }
+            .container { padding: 25px; border-radius: 0; }
         }
     </style>
 </head>
@@ -121,7 +127,7 @@
 <div class="container">
     <div class="header">
         <h2>Registo de Horas Extra</h2>
-        <p>Submissão de dados e comprovativos para fornecedores.</p>
+        <p>Preencha os campos abaixo e anexe o comprovativo.</p>
     </div>
 
     <form id="formHoras">
@@ -147,33 +153,33 @@
             </div>
 
             <div class="campo">
-                <label>Horas Paralização <span class="optional-tag">(Opcional)</span></label>
-                <input type="number" step="0.5" name="horasParalizacao" placeholder="0">
+                <label>Nº Horas Paralização <span class="opcional">(Opcional)</span></label>
+                <input type="number" step="0.5" name="horasParalizacao" placeholder="0.0">
             </div>
 
             <div class="campo">
-                <label>Valor Frete Corrigido <span class="optional-tag">(Opcional)</span></label>
+                <label>Valor do Frete Corrigido <span class="opcional">(Opcional)</span></label>
                 <input type="number" step="0.01" name="valorFrete" placeholder="0.00 €">
             </div>
 
             <div class="campo full-width">
-                <label>Comprovativo (Foto ou PDF - Máx 5MB) *</label>
+                <label>Comprovativo / Guia (PDF ou Foto - Max 5MB) *</label>
                 <input type="file" id="ficheiro" accept="application/pdf,image/*" required>
             </div>
 
             <div class="campo full-width">
-                <label>Observações <span class="optional-tag">(Opcional)</span></label>
-                <textarea name="observacoes" rows="2" placeholder="Informações adicionais relevantes..."></textarea>
+                <label>Observações <span class="opcional">(Opcional)</span></label>
+                <textarea name="observacoes" rows="3" placeholder="Insira notas adicionais se necessário..."></textarea>
             </div>
         </div>
 
-        <button type="submit" id="btnEnviar">Submeter Registo</button>
+        <button type="submit" id="btnEnviar">Enviar Dados para Validação</button>
     </form>
     <div id="status"></div>
 </div>
 
 <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwrpve7DpO1cD3mICldTyzYhLPL9IvPV-sJhF7c6jElOfJh-P6yO1Fy_R9c2gy7tEmd/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxWRnnMGQEOAJDhQLt9d7bZgBWv7N4YxHBUJhDZIl2YZOwSQTOvAr74Ln877hD3RMUO/exec';
     const form = document.getElementById('formHoras');
     const btn = document.getElementById('btnEnviar');
     const status = document.getElementById('status');
@@ -184,17 +190,18 @@
         const fileInput = document.getElementById('ficheiro');
         const file = fileInput.files[0];
 
+        // Validação básica de tamanho
         if (file && file.size > 5 * 1024 * 1024) {
-            alert('Erro: O ficheiro excede o limite de 5MB.');
+            alert('O ficheiro é demasiado grande. Por favor, insira um ficheiro até 5MB.');
             return;
         }
 
         btn.disabled = true;
-        btn.innerText = 'A processar ficheiro...';
+        btn.innerText = 'A processar submissão...';
         status.style.display = 'block';
         status.style.background = '#f1f5f9';
         status.style.color = '#475569';
-        status.innerText = 'A converter ficheiro e a enviar...';
+        status.innerText = 'A converter ficheiro e a comunicar com o servidor...';
 
         const reader = new FileReader();
         reader.onload = function(event) {
@@ -220,17 +227,21 @@
             .then(res => {
                 status.style.background = '#dcfce7';
                 status.style.color = '#166534';
-                status.innerText = '✓ Sucesso! O registo e o ficheiro foram guardados.';
+                status.innerText = '✓ Sucesso! Os dados e o comprovativo foram registados.';
                 form.reset();
                 btn.disabled = false;
-                btn.innerText = 'Submeter Registo';
+                btn.innerText = 'Enviar Dados para Validação';
+                
+                // Ocultar mensagem de sucesso após 10 segundos
+                setTimeout(() => { status.style.display = 'none'; }, 10000);
             })
             .catch(err => {
+                console.error(err);
                 status.style.background = '#fee2e2';
                 status.style.color = '#991b1b';
-                status.innerText = 'Erro na ligação. Verifique se a pasta do Drive tem permissões de Editor.';
+                status.innerText = 'Erro ao enviar. Verifique as permissões da pasta no Drive.';
                 btn.disabled = false;
-                btn.innerText = 'Submeter Registo';
+                btn.innerText = 'Enviar Dados para Validação';
             });
         };
         reader.readAsDataURL(file);
